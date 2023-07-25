@@ -4,8 +4,7 @@ plugins {
 
 val wrapperVersion: String = GradleVersion.current().version
 
-// The plugin is broken with Gradle 5.6.*
-val otherVersions = listOf("7.6.2")
+val otherVersions = listOf("6.9.1", "7,6,2")
 
 val testedGradleVersions = otherVersions - wrapperVersion
 
