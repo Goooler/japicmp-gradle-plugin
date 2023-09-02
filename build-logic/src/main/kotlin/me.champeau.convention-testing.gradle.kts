@@ -2,23 +2,8 @@ plugins {
     id("java")
 }
 
-val wrapperVersion: String = GradleVersion.current().version
-
-// The plugin is broken with Gradle 5.6.*
-val otherVersions = listOf("7.6.2")
-
-val testedGradleVersions = otherVersions - wrapperVersion
-
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
-
-    val testJavaVersion = providers.gradleProperty("me.champeau.japicmp.javaToolchain.test")
-        .getOrElse("8")
-    javaLauncher.set(
-        javaToolchains.launcherFor {
-            languageVersion = JavaLanguageVersion.of(testJavaVersion)
-        }
-    )
 
     maxParallelForks = if (System.getenv("CI") != null) {
         Runtime.getRuntime().availableProcessors()
@@ -29,28 +14,38 @@ tasks.withType<Test>().configureEach {
 }
 
 tasks.test {
-    description = "Runs the tests against Gradle $wrapperVersion"
-    systemProperty("gradleVersion", wrapperVersion)
+    // Use the latest Gradle supported JDK here.
+    configureCommon(20, GradleVersion.current().version)
 }
 
-val testAllGradleVersions by tasks.registering {
-    group = "verification"
-    description = "Runs the tests against all supported Gradle versions"
-    dependsOn(tasks.test)
-}
-
-tasks.check {
-    dependsOn(testAllGradleVersions)
-}
-
-testedGradleVersions.forEach { gradleVersion ->
-    val task = tasks.register<Test>("testGradle${gradleVersion.replace(".", "_").replace("-", "_")}") {
-        group = "verification"
-        description = "Runs the tests against Gradle $gradleVersion"
-        classpath = tasks.test.get().classpath
-        systemProperty("gradleVersion", gradleVersion)
+listOf(8, 11, 17).forEach {
+    if (it != 17) {
+        // Gradle 6.0 doesn't support JDK 17.
+        testJdkOnGradle(it, "6.0")
     }
-    testAllGradleVersions.configure {
-        dependsOn(task)
+    testJdkOnGradle(it, "7.3")
+    testJdkOnGradle(it, "7.6")
+    testJdkOnGradle(it, GradleVersion.current().version)
+}
+
+fun testJdkOnGradle(jdkVersion: Int, gradleVersion: String) {
+    tasks.register<Test>("testJdk${jdkVersion}onGradle${gradleVersion}") {
+        configureCommon(jdkVersion, gradleVersion)
+        classpath = tasks.test.get().classpath
+        testClassesDirs = tasks.test.get().testClassesDirs
+    }
+}
+
+fun Test.configureCommon(jdkVersion: Int, gradleVersion: String) {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = "Runs the test suite on JDK $jdkVersion and Gradle $gradleVersion"
+
+    systemProperty("gradleVersion", gradleVersion)
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(jdkVersion)
+    }
+
+    tasks.check {
+        dependsOn(this@configureCommon)
     }
 }
