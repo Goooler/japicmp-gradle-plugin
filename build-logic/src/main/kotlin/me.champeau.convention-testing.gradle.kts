@@ -20,8 +20,8 @@ tasks.test {
 
 listOf(8, 11, 17).forEach {
     if (it != 17) {
-        // Gradle 6.0 doesn't support JDK 17.
-        testJdkOnGradle(it, "6.0")
+        // Gradle 6.6 doesn't support JDK 17.
+        testJdkOnGradle(it, "6.6")
     }
     testJdkOnGradle(it, "7.3")
     testJdkOnGradle(it, "7.6")
