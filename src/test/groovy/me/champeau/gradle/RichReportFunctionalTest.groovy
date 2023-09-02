@@ -8,7 +8,6 @@ class RichReportFunctionalTest extends BaseFunctionalTest {
 
     @Unroll("can generate rich report with #type rules")
     def "can generate rich report with rules"() {
-        // https://github.com/gradle/gradle/issues/17340
         supportsConfigurationCache = false
 
         def task = "japicmp${type.capitalize()}"

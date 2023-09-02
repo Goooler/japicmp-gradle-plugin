@@ -104,7 +104,7 @@ abstract class BaseFunctionalTest extends Specification {
 
     private List<String> getExtraArguments() {
         def extraArgs = ['--stacktrace', '--warning-mode=fail']
-        // TODO: Enable CC for all tests once the min Gradle is bumped to 7.2+
+        // TODO: https://github.com/melix/japicmp-gradle-plugin/commit/c398274f8e0a3c3daad7475c420806cebbef190e
         if (supportsConfigurationCache) {
             extraArgs << '--configuration-cache'
         }
