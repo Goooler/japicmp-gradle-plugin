@@ -13,19 +13,20 @@ tasks.withType<Test>().configureEach {
     }
 }
 
+val currentGradle: String = GradleVersion.current().version
+val allGradle = listOf("6.6", "7.3", "7.6", currentGradle)
+
 tasks.test {
     // Use the latest Gradle supported JDK here.
-    configureCommon(20, GradleVersion.current().version)
+    configureCommon(20, currentGradle)
 }
 
-listOf(8, 11, 17).forEach {
-    if (it != 17) {
-        // Gradle 6.6 doesn't support JDK 17.
-        testJdkOnGradle(it, "6.6")
+allGradle.forEach {
+    testJdkOnGradle(8, it)
+    testJdkOnGradle(11, it)
+    if (it > "6.6") {
+        testJdkOnGradle(17, it)
     }
-    testJdkOnGradle(it, "7.3")
-    testJdkOnGradle(it, "7.6")
-    testJdkOnGradle(it, GradleVersion.current().version)
 }
 
 fun testJdkOnGradle(jdkVersion: Int, gradleVersion: String) {
