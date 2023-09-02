@@ -11,8 +11,6 @@ class CustomFilteringTest extends BaseFunctionalTest {
     }
 
     def "can use custom japicmp filters"() {
-        supportsConfigurationCache = false
-
         when:
         def result = run 'japicmpAddCustomMatchTriggers'
 

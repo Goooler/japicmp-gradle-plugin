@@ -8,8 +8,6 @@ class RichReportFunctionalTest extends BaseFunctionalTest {
 
     @Unroll("can generate rich report with #type rules")
     def "can generate rich report with rules"() {
-        supportsConfigurationCache = false
-
         def task = "japicmp${type.capitalize()}"
         when:
         def result = run task
