@@ -15,6 +15,8 @@ tasks.withType<Test>().configureEach {
 
 val currentGradle: String = GradleVersion.current().version
 val allGradle = listOf("6.6", "7.3", "7.6", currentGradle)
+val testJdk = providers.gradleProperty("me.champeau.japicmp.javaToolchain.test")
+    .getOrElse("8").toInt()
 
 tasks.test {
     // Use the latest Gradle supported JDK here.
@@ -22,11 +24,9 @@ tasks.test {
 }
 
 allGradle.forEach {
-    testJdkOnGradle(8, it)
-    testJdkOnGradle(11, it)
-    if (it > "6.6") {
-        testJdkOnGradle(17, it)
-    }
+    // Gradle 6.6 doesn't support JDK 17.
+    if (it == "6.6" && testJdk == 17) return@forEach
+    testJdkOnGradle(testJdk, it)
 }
 
 fun testJdkOnGradle(jdkVersion: Int, gradleVersion: String) {
