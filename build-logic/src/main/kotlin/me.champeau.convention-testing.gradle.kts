@@ -19,13 +19,15 @@ val testJdk = providers.gradleProperty("me.champeau.japicmp.javaToolchain.test")
     .getOrElse("8").toInt()
 
 tasks.test {
-    // Use the latest Gradle supported JDK here.
-    configureCommon(20, currentGradle)
+    // Skip default test.
+    onlyIf { false }
 }
 
 allGradle.forEach {
     // Gradle 6.6 doesn't support JDK 17.
     if (it == "6.6" && testJdk == 17) return@forEach
+    // Gradle 8.3 started to support JDK 20.
+    if (it < "8.3" && testJdk >= 20) return@forEach
     testJdkOnGradle(testJdk, it)
 }
 
