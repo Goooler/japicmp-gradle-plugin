@@ -1,6 +1,6 @@
 Unreleased
 -----
-   * Bump min Gradle requirement to 6.6
+   * Bump min Gradle requirement to 7.2
 0.4.2
 -----
    * Bump min Gradle requirement to 6.0

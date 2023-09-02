@@ -14,7 +14,7 @@ tasks.withType<Test>().configureEach {
 }
 
 val currentGradle: String = GradleVersion.current().version
-val allGradle = listOf("6.6", "7.3", "7.6", currentGradle)
+val allGradle = listOf("7.2", "7.3", "7.6", currentGradle)
 val testJdk = providers.gradleProperty("me.champeau.japicmp.javaToolchain.test")
     .getOrElse("8").toInt()
 
@@ -24,8 +24,8 @@ tasks.test {
 }
 
 allGradle.forEach {
-    // Gradle 6.6 doesn't support JDK 17.
-    if (it == "6.6" && testJdk == 17) return@forEach
+    // Gradle 7.2 doesn't support JDK 17.
+    if (it == "7.2" && testJdk == 17) return@forEach
     // Gradle 8.3 starts to support JDK 20.
     if (it < "8.3" && testJdk >= 20) return@forEach
     testJdkOnGradle(testJdk, it)

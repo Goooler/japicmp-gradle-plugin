@@ -11,9 +11,6 @@ class CustomFilteringTest extends BaseFunctionalTest {
     }
 
     def "can use custom japicmp filters"() {
-        // https://github.com/gradle/gradle/issues/17340
-        supportsConfigurationCache = false
-
         when:
         def result = run 'japicmpAddCustomMatchTriggers'
 

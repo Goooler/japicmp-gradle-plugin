@@ -100,14 +100,7 @@ abstract class BaseFunctionalTest extends Specification {
         System.getProperty("gradleVersion")
     }
 
-    protected boolean supportsConfigurationCache = true
-
     private List<String> getExtraArguments() {
-        def extraArgs = ['--stacktrace', '--warning-mode=fail']
-        // TODO: Enable CC for all tests once the min Gradle is bumped to 7.2+
-        if (supportsConfigurationCache) {
-            extraArgs << '--configuration-cache'
-        }
-        return extraArgs
+        return ['--stacktrace', '--warning-mode=fail', '--configuration-cache']
     }
 }
