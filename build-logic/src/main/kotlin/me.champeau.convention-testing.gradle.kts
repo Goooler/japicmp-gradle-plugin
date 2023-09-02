@@ -29,10 +29,13 @@ listOf(8, 11, 17).forEach {
 }
 
 fun testJdkOnGradle(jdkVersion: Int, gradleVersion: String) {
-    tasks.register<Test>("testJdk${jdkVersion}onGradle${gradleVersion}") {
+    val task = tasks.register<Test>("testJdk${jdkVersion}onGradle${gradleVersion}") {
         configureCommon(jdkVersion, gradleVersion)
         classpath = tasks.test.get().classpath
         testClassesDirs = tasks.test.get().testClassesDirs
+    }
+    tasks.check {
+        dependsOn(task)
     }
 }
 
@@ -43,9 +46,5 @@ fun Test.configureCommon(jdkVersion: Int, gradleVersion: String) {
     systemProperty("gradleVersion", gradleVersion)
     javaLauncher = javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(jdkVersion)
-    }
-
-    tasks.check {
-        dependsOn(this@configureCommon)
     }
 }
