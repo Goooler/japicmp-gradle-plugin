@@ -2,7 +2,6 @@ package me.champeau.gradle
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.util.GradleVersion
 import spock.lang.Specification
 import spock.lang.TempDir
 
@@ -101,17 +100,8 @@ abstract class BaseFunctionalTest extends Specification {
         System.getProperty("gradleVersion")
     }
 
-    protected boolean supportsConfigurationCache = true
-
     private List<String> getExtraArguments() {
-        def extraArgs = ['--stacktrace']
-        def version = GradleVersion.version(gradleVersion)
-        extraArgs << '--warning-mode=fail'
-        if (version >= GradleVersion.version('7.2')) {
-            if (supportsConfigurationCache) {
-                extraArgs << '--configuration-cache'
-            }
-        }
-        return extraArgs
+        // Gradle intro configuration cache in 6.6, we are now on it.
+        return ['--stacktrace', '--warning-mode=fail', '--configuration-cache']
     }
 }
