@@ -2,4 +2,4 @@ include ':bom'
 include ':simple'
 
 // https://docs.gradle.org/8.5/userguide/upgrading_version_8.html#deprecated_missing_project_directory
-project('simple').projectDir.mkdirs()
+project(':simple').projectDir.mkdirs()
