@@ -85,7 +85,7 @@ abstract class BaseFunctionalTest extends Specification {
     }
 
     protected GradleRunner getRunner(String... tasks) {
-        GradleRunner.create()
+        return GradleRunner.create()
                 .withGradleVersion(System.getProperty("gradleVersion"))
                 .withProjectDir(testProjectDir.toFile())
                 .withArguments(*(extraArguments + (tasks as List)))
