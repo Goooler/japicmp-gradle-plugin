@@ -77,27 +77,20 @@ abstract class BaseFunctionalTest extends Specification {
     }
 
     BuildResult run(String... tasks) {
-        GradleRunner.create()
-                .withGradleVersion(gradleVersion)
-                .withProjectDir(testProjectDir.toFile())
-                .withArguments(*(extraArguments + (tasks as List)))
-                .forwardOutput()
-                .withPluginClasspath()
-                .build()
+        return getRunner(tasks).build()
     }
 
     BuildResult fails(String... tasks) {
+        return getRunner(tasks).buildAndFail()
+    }
+
+    protected GradleRunner getRunner(String... tasks) {
         GradleRunner.create()
-                .withGradleVersion(gradleVersion)
+                .withGradleVersion(System.getProperty("gradleVersion"))
                 .withProjectDir(testProjectDir.toFile())
                 .withArguments(*(extraArguments + (tasks as List)))
                 .withPluginClasspath()
                 .forwardOutput()
-                .buildAndFail()
-    }
-
-    private String getGradleVersion() {
-        System.getProperty("gradleVersion")
     }
 
     protected boolean supportsConfigurationCache = true
