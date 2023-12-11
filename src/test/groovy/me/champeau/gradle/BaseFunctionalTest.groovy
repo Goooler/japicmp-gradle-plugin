@@ -91,6 +91,15 @@ abstract class BaseFunctionalTest extends Specification {
                 .withArguments(*(extraArguments + (tasks as List)))
                 .withPluginClasspath()
                 .forwardOutput()
+                .withTestKitDir(testKitDir)
+    }
+
+    private static File getTestKitDir() {
+        def gradleUserHome = System.getenv("GRADLE_USER_HOME")
+        if (!gradleUserHome) {
+            gradleUserHome = new File(System.getProperty("user.home"), ".gradle").absolutePath
+        }
+        return new File(gradleUserHome, "testkit")
     }
 
     protected boolean supportsConfigurationCache = true
