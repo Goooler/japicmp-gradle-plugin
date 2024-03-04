@@ -141,7 +141,7 @@ public class Violation {
     }
 
     public static String describe(JApiCompatibilityChange change) {
-        switch (change) {
+        switch (change.getType()) {
             case ANNOTATION_DEPRECATED_ADDED:
                 return "Deprecated annotation was added";
             case CLASS_REMOVED:
