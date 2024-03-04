@@ -28,10 +28,7 @@ import japicmp.filter.JavaDocLikeClassFilter;
 import japicmp.filter.JavadocLikeBehaviorFilter;
 import japicmp.filter.JavadocLikeFieldFilter;
 import japicmp.filter.JavadocLikePackageFilter;
-import japicmp.model.AccessModifier;
-import japicmp.model.JApiClass;
-import japicmp.model.JApiCompatibilityChange;
-import japicmp.model.JApiSemanticVersionLevel;
+import japicmp.model.*;
 import japicmp.output.semver.SemverOut;
 import japicmp.output.stdout.StdoutOutputGenerator;
 import japicmp.output.xml.XmlOutput;
@@ -155,8 +152,8 @@ public class JApiCmpWorkerAction extends JapiCmpWorkerConfiguration implements R
             options.getFilters().getExcludes().add(instantiateFilter(excludeFilter));
         }
         for (String override : compatibilityChangeExcludes) {
-            JApiCompatibilityChange overrideChange = JApiCompatibilityChange.valueOf(override);
-            options.addOverrideCompatibilityChange(new OverrideCompatibilityChange(overrideChange,
+            JApiCompatibilityChange overrideChange = new JApiCompatibilityChange(JApiCompatibilityChangeType.valueOf(override));
+            options.addOverrideCompatibilityChange(new OverrideCompatibilityChange(overrideChange.getType(),
                 true, true, JApiSemanticVersionLevel.PATCH));
         }
 
