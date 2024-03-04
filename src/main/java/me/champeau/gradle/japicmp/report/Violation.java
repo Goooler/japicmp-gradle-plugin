@@ -231,7 +231,7 @@ public class Violation {
             case CONSTRUCTOR_LESS_ACCESSIBLE:
                 return "Constructor is less accessible";
         }
-        return change.toString();
+        return change.getType().toString();
     }
 
     public Violation withSeverity(Severity severity) {
