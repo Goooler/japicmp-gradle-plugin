@@ -19,6 +19,7 @@ import japicmp.model.JApiChangeStatus;
 import japicmp.model.JApiClass;
 import japicmp.model.JApiCompatibility;
 import japicmp.model.JApiCompatibilityChange;
+import japicmp.model.JApiCompatibilityChangeType;
 import japicmp.model.JApiConstructor;
 import japicmp.model.JApiField;
 import japicmp.model.JApiHasChangeStatus;
@@ -87,12 +88,12 @@ public class ViolationsGenerator {
     }
 
     public void addRule(JApiCompatibilityChange change, ViolationRule rule) {
-        List<ViolationRule> violationRules = apiCompatibilityRules.get(change);
-        if (violationRules == null) {
-            violationRules = new ArrayList<>();
-            apiCompatibilityRules.put(change, violationRules);
-        }
+        List<ViolationRule> violationRules = apiCompatibilityRules.computeIfAbsent(change, k -> new ArrayList<>());
         violationRules.add(rule);
+    }
+
+    public void addRule(JApiCompatibilityChangeType change, ViolationRule rule) {
+        addRule(new JApiCompatibilityChange(change), rule);
     }
 
     public void addRule(JApiChangeStatus status, ViolationRule rule) {
