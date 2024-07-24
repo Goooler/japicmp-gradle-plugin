@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
 public class ViolationsGenerator {
     private final List<Pattern> includePatterns;
     private final List<Pattern> excludePatterns;
-    private final Map<JApiCompatibilityChange, List<ViolationRule>> apiCompatibilityRules = new HashMap<JApiCompatibilityChange, List<ViolationRule>>();
+    private final Map<JApiCompatibilityChangeType, List<ViolationRule>> apiCompatibilityRules = new HashMap<JApiCompatibilityChangeType, List<ViolationRule>>();
     private final Map<JApiChangeStatus, List<ViolationRule>> statusRules = new HashMap<JApiChangeStatus, List<ViolationRule>>();
     private final List<ViolationRule> genericRules = new ArrayList<ViolationRule>();
 
@@ -87,13 +87,13 @@ public class ViolationsGenerator {
         genericRules.add(rule);
     }
 
-    public void addRule(JApiCompatibilityChange change, ViolationRule rule) {
-        List<ViolationRule> violationRules = apiCompatibilityRules.computeIfAbsent(change, k -> new ArrayList<>());
-        violationRules.add(rule);
-    }
-
     public void addRule(JApiCompatibilityChangeType change, ViolationRule rule) {
-        addRule(new JApiCompatibilityChange(change), rule);
+        List<ViolationRule> violationRules = apiCompatibilityRules.get(change);
+        if (violationRules == null) {
+            violationRules = new ArrayList<>();
+            apiCompatibilityRules.put(change, violationRules);
+        }
+        violationRules.add(rule);
     }
 
     public void addRule(JApiChangeStatus status, ViolationRule rule) {
@@ -182,7 +182,7 @@ public class ViolationsGenerator {
         processClass(clazz, context);
     }
 
-    private void processCompatibilityChange(JApiCompatibilityChange kind, JApiCompatibility member, final Context context) {
+    private void processCompatibilityChange(JApiCompatibilityChangeType kind, JApiCompatibility member, final Context context) {
         List<ViolationRule> violationRules = apiCompatibilityRules.get(kind);
         if (violationRules != null) {
             for (ViolationRule violationRule : violationRules) {
@@ -221,7 +221,7 @@ public class ViolationsGenerator {
 
     private void processCompatibilityChanges(final JApiCompatibility elt, final Context context) {
         for (JApiCompatibilityChange compatibilityChange : elt.getCompatibilityChanges()) {
-            processCompatibilityChange(compatibilityChange, elt, context);
+            processCompatibilityChange(compatibilityChange.getType(), elt, context);
         }
     }
 
