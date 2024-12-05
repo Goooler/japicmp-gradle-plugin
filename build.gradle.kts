@@ -21,5 +21,5 @@ dependencies {
     compileOnly(gradleApi())
 
     testImplementation(gradleTestKit())
-    testImplementation("org.spockframework:spock-core:2.3-groovy-3.0")
+    testImplementation("org.spockframework:spock-core:2.3-groovy-4.0")
 }
